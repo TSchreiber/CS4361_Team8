@@ -51,6 +51,8 @@ public class Launcher extends Application {
 
     private class MouseRotationHandler implements EventHandler<MouseEvent> {
 
+        public static double ROTATION_SPEED = 1/3f;
+
         private Point2D anchor;
         private Rotate xRotation, yRotation;
         private double initialAngleX, initialAngleY;
@@ -70,8 +72,8 @@ public class Launcher extends Application {
                 initialAngleX = xRotation.getAngle();
                 initialAngleY = yRotation.getAngle();
             } else if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-                xRotation.setAngle(initialAngleX - (anchor.getY() - e.getSceneY()));
-                yRotation.setAngle(initialAngleY - (anchor.getX() - e.getSceneX()));
+                xRotation.setAngle(initialAngleX - (anchor.getY() - e.getSceneY()) * ROTATION_SPEED);
+                yRotation.setAngle(initialAngleY + (anchor.getX() - e.getSceneX()) * ROTATION_SPEED);
             }
         }
 
