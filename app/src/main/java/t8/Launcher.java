@@ -28,6 +28,7 @@ public class Launcher extends Application {
     public void start(Stage stage) throws Exception {
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 800, true);
+        scene.setFill(Color.BLANCHEDALMOND);
         root.getChildren().add(new AmbientLight());
 
         root.setScaleX(50);
@@ -36,15 +37,7 @@ public class Launcher extends Application {
         root.setTranslateX(600);
         root.setTranslateY(400);
 
-        ObjModelImporter objImporter = new ObjModelImporter();
-        try {
-            URL modelURL = Launcher.class.getResource("rubiksCube.obj");
-            objImporter.read(modelURL);
-        } catch (ImportException ex) {
-            throw new RuntimeException(ex);
-        }
-        MeshView[] meshViews = objImporter.getImport();
-        Group cube = new Group(meshViews);
+        Node cube = new RubiksCube(); 
         root.getChildren().addAll(cube);
 
         var rotHandler = new MouseRotationHandler(cube);
@@ -71,6 +64,7 @@ public class Launcher extends Application {
         }
 
         public void handle(MouseEvent e) {
+            if (e.getButton() != MouseButton.SECONDARY) return;
             if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
                 anchor = new Point2D(e.getSceneX(), e.getSceneY());
                 initialAngleX = xRotation.getAngle();
