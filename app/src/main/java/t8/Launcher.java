@@ -37,12 +37,23 @@ public class Launcher extends Application {
         root.setTranslateX(600);
         root.setTranslateY(400);
 
-        Node cube = new RubiksCube(); 
+        var cube = new RubiksCube(); 
         root.getChildren().addAll(cube);
 
         var rotHandler = new MouseRotationHandler(cube);
-        scene.setOnMousePressed(rotHandler);
-        scene.setOnMouseDragged(rotHandler);
+        var faceRotationHandler = new FaceRotationHandler(cube);
+        scene.setOnMousePressed((MouseEvent e) -> {
+            rotHandler.handle(e);
+            faceRotationHandler.handle(e);
+        });
+        scene.setOnMouseDragged((MouseEvent e) -> {
+            rotHandler.handle(e);
+            faceRotationHandler.handle(e);
+        });
+        scene.setOnMouseReleased((MouseEvent e) -> {
+            rotHandler.handle(e);
+            faceRotationHandler.handle(e);
+        });
 
         stage.setTitle("Rubik's Cube");
         stage.setScene(scene);
