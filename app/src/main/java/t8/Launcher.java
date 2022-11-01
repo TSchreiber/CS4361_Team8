@@ -5,6 +5,7 @@ import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
+import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -26,34 +27,42 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Group root = new Group();
-        Scene scene = new Scene(root, 1200, 800, true);
-        scene.setFill(Color.BLANCHEDALMOND);
-        root.getChildren().add(new AmbientLight());
+        VBox root = new VBox();
+        Scene scene = new Scene(root, Color.BLANCHEDALMOND);
 
-        root.setScaleX(50);
-        root.setScaleY(50);
-        root.setScaleZ(50);
-        root.setTranslateX(600);
-        root.setTranslateY(400);
+        HBox menu = new HBox();
+        menu.getChildren().addAll(new Button("Button1"), new Button("Button2"));
 
-        var cube = new RubiksCube(); 
-        root.getChildren().addAll(cube);
+        Group root3d = new Group();
+        SubScene scene3d = new SubScene(root3d, 1200, 800, true, SceneAntialiasing.BALANCED);
+        scene3d.setFill(Color.BLANCHEDALMOND);
+        root3d.getChildren().add(new AmbientLight());
+
+        root3d.setScaleX(50);
+        root3d.setScaleY(50);
+        root3d.setScaleZ(50);
+        root3d.setTranslateX(600);
+        root3d.setTranslateY(400);
+
+        var cube = new RubiksCube();
+        root3d.getChildren().addAll(cube);
 
         var rotHandler = new MouseRotationHandler(cube);
         var faceRotationHandler = new FaceRotationHandler(cube);
-        scene.setOnMousePressed((MouseEvent e) -> {
+        scene3d.setOnMousePressed((MouseEvent e) -> {
             rotHandler.handle(e);
             faceRotationHandler.handle(e);
         });
-        scene.setOnMouseDragged((MouseEvent e) -> {
+        scene3d.setOnMouseDragged((MouseEvent e) -> {
             rotHandler.handle(e);
             faceRotationHandler.handle(e);
         });
-        scene.setOnMouseReleased((MouseEvent e) -> {
+        scene3d.setOnMouseReleased((MouseEvent e) -> {
             rotHandler.handle(e);
             faceRotationHandler.handle(e);
         });
+
+        root.getChildren().addAll(menu, scene3d);
 
         stage.setTitle("Rubik's Cube");
         stage.setScene(scene);
