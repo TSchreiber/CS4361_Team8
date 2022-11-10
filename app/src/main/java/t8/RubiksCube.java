@@ -53,6 +53,10 @@ public class RubiksCube extends Group {
         return cubletMatrix[x][y][z];
     }
 
+    public Cublet get(Point3D p) {
+        return cubletMatrix[(int)p.getX()][(int)p.getY()][(int)p.getZ()];
+    }
+
     public Cublet[][] get(Face face) {
         Cublet[][] out = new Cublet[3][3];
         Point3D normal = faceNormals.get(face);
