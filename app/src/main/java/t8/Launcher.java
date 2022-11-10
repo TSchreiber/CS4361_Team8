@@ -32,7 +32,7 @@ public class Launcher extends Application {
     final Button buttonPause = new Button("Pause");
     private Font font = new Font("Verdana", 36);
 	public static Integer i = 0;
-
+    private MouseHandler mouseHandler;
     
     public static void main(String[] args) {
         launch(args);
@@ -102,7 +102,7 @@ public class Launcher extends Application {
                     cube.scramble();
 					root3d.getChildren().addAll(cube);
 					root3d.getChildren().add(new AmbientLight());
-                    MouseHandler mouseHandler = new MouseHandler(cube);
+                    mouseHandler = new MouseHandler(cube);
                     scene3d.setOnMousePressed(mouseHandler);
                     scene3d.setOnMouseDragged(mouseHandler);
                     scene3d.setOnMouseReleased(mouseHandler);
@@ -121,10 +121,12 @@ public class Launcher extends Application {
 				try {
 					if(buttonPause.getText() == "Pause") {
                         timer.pause();
+                        mouseHandler.disable();
 						buttonPause.setText("Resume");
 					}
 					else {
                         timer.unpause();
+                        mouseHandler.enable();
 						buttonPause.setText("Pause");
 					}
 				} catch (Exception el) {
@@ -153,7 +155,7 @@ public class Launcher extends Application {
         cube.addRotationEventHandler(e -> moveCount.setText((++i).toString()));
         root3d.getChildren().addAll(cube);
 
-        MouseHandler mouseHandler = new MouseHandler(cube);
+        mouseHandler = new MouseHandler(cube);
         scene3d.setOnMousePressed(mouseHandler);
         scene3d.setOnMouseDragged(mouseHandler);
         scene3d.setOnMouseReleased(mouseHandler);

@@ -25,6 +25,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
     }
 
     public void handle(MouseEvent e) {
+        if (!isEnabled()) return;
         if (e.getButton() == MouseButton.PRIMARY) {
             faceRotationHandler.handle(e);
         } else if (e.getButton() == MouseButton.SECONDARY) {
