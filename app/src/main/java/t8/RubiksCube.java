@@ -5,6 +5,7 @@ import com.interactivemesh.jfx.importer.*;
 import com.google.common.collect.*;
 import java.net.*;
 import java.util.*;
+import java.util.function.*;
 import java.util.stream.*;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -24,6 +25,11 @@ public class RubiksCube extends Group {
         Face.YELLOW, new Point3D( 0, 0, 1)));
 
     private Cublet[][][] cubletMatrix = new Cublet[3][3][3];
+    private List<Consumer<RotationEvent>> rotationEventHandlers = new LinkedList<>();
+
+    public void addRotationEventHandler(Consumer<RotationEvent> handler) {
+        rotationEventHandlers.add(handler);
+    }
 
     public void setCublets(Face face, Cublet[][] cublets) {
         Point3D normal = faceNormals.get(face);
@@ -73,6 +79,7 @@ public class RubiksCube extends Group {
 
     public void rotate(Face face, int angle) {
         angle = (angle + 360) % 360;
+        if (angle == 0) return;
         // The direction to rotate the matrix will be inverted for the 
         // back side of the cube
         if (angle == 90 || angle == 270) {
@@ -101,7 +108,13 @@ public class RubiksCube extends Group {
                     CubletMatrixUtil.rotateClockwise(
                     get(face)));
                 break;
+
+            default:
+                throw new IllegalArgumentException(
+                    String.format("Provided rotation angle, %d not a multple of 90", angle));
         }
+        RotationEvent e = new RotationEvent(face, angle);
+        rotationEventHandlers.stream().forEach(h -> h.accept(e));
     }
 
     public class Cublet extends Group {
