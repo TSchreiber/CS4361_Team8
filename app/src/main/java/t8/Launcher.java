@@ -47,20 +47,10 @@ public class Launcher extends Application {
         var cube = new RubiksCube();
         root3d.getChildren().addAll(cube);
 
-        var rotHandler = new MouseRotationHandler(cube);
-        var faceRotationHandler = new FaceRotationHandler(cube);
-        scene3d.setOnMousePressed((MouseEvent e) -> {
-            rotHandler.handle(e);
-            faceRotationHandler.handle(e);
-        });
-        scene3d.setOnMouseDragged((MouseEvent e) -> {
-            rotHandler.handle(e);
-            faceRotationHandler.handle(e);
-        });
-        scene3d.setOnMouseReleased((MouseEvent e) -> {
-            rotHandler.handle(e);
-            faceRotationHandler.handle(e);
-        });
+        MouseHandler mouseHandler = new MouseHandler(cube);
+        scene3d.setOnMousePressed(mouseHandler);
+        scene3d.setOnMouseDragged(mouseHandler);
+        scene3d.setOnMouseReleased(mouseHandler);
 
         root.getChildren().addAll(menu, scene3d);
 
@@ -69,34 +59,6 @@ public class Launcher extends Application {
         stage.show();
     }
 
-    private class MouseRotationHandler implements EventHandler<MouseEvent> {
-
-        public static double ROTATION_SPEED = 1/3f;
-
-        private Point2D anchor;
-        private Rotate xRotation, yRotation;
-        private double initialAngleX, initialAngleY;
-        private Node cube;
-
-        public MouseRotationHandler(Node cube) {
-            this.cube = cube;
-            xRotation = new Rotate(0, Rotate.X_AXIS);
-            yRotation = new Rotate(0, Rotate.Y_AXIS);
-            cube.getTransforms().addAll(xRotation, yRotation);
-        }
-
-        public void handle(MouseEvent e) {
-            if (e.getButton() != MouseButton.SECONDARY) return;
-            if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
-                anchor = new Point2D(e.getSceneX(), e.getSceneY());
-                initialAngleX = xRotation.getAngle();
-                initialAngleY = yRotation.getAngle();
-            } else if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-                xRotation.setAngle(initialAngleX - (anchor.getY() - e.getSceneY()) * ROTATION_SPEED);
-                yRotation.setAngle(initialAngleY + (anchor.getX() - e.getSceneX()) * ROTATION_SPEED);
-            }
-        }
-
-    }
+    
 
 }
