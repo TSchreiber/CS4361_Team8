@@ -33,6 +33,7 @@ public class Launcher extends Application {
     private Font font = new Font("Verdana", 36);
 	public static Integer i = 0;
     private MouseHandler mouseHandler;
+    private Timer timer;
     
     public static void main(String[] args) {
         launch(args);
@@ -45,7 +46,7 @@ public class Launcher extends Application {
         Text moves = new Text("MOVES");
         moves.setFont(Font.font("Helvetica", FontWeight.BOLD, 70));
         Label moveCount = new Label(i.toString());
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.startTimer();
         stage.setOnCloseRequest(e -> timer.stopTimer());
         Text time = new Text("TIME");
@@ -99,7 +100,7 @@ public class Launcher extends Application {
 					var cube = new RubiksCube(); 
                     // scramble before adding the move count system so scramble moves don't 
                     // get counted towards the total
-                    cube.scramble();
+                    //cube.scramble();
 					root3d.getChildren().addAll(cube);
 					root3d.getChildren().add(new AmbientLight());
                     mouseHandler = new MouseHandler(cube);
@@ -152,7 +153,12 @@ public class Launcher extends Application {
         // scramble before adding the move count system so scramble moves don't 
         // get counted towards the total
         cube.scramble();
-        cube.addRotationEventHandler(e -> moveCount.setText((++i).toString()));
+        cube.addRotationEventHandler(e -> {
+            moveCount.setText((++i).toString());
+            if (cube.isSolved()) {
+                onSolved();
+            }
+        });
         root3d.getChildren().addAll(cube);
 
         mouseHandler = new MouseHandler(cube);
@@ -166,6 +172,16 @@ public class Launcher extends Application {
         stage.setTitle("Rubik's Cube");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void onSolved() {
+        timer.stopTimer();
+        mouseHandler.disable();
+        System.out.println(getScore());
+    }
+
+    private int getScore() {
+        return (int)(timer.getTime() * i);
     }
 
 }

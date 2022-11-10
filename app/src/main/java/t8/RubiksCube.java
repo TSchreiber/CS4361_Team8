@@ -17,6 +17,7 @@ import org.worldcubeassociation.tnoodle.scrambles.*;
 public class RubiksCube extends Group {
 
     private static final String OBJ_URI = "rubiksCube.obj";
+    private static Cublet[][][] solvedCube;
 
     public static final BiMap<Face,Point3D> faceNormals = HashBiMap.create(Map.of(
         Face.WHITE,  new Point3D( 0, 0,-1),
@@ -150,6 +151,23 @@ public class RubiksCube extends Group {
         new SequenceStringProcessor(this).accept(sequenceString);
     }
 
+    public boolean isSolved() {
+        // This will give the incorrect result for certain cases when
+        // all the cublets are in the correct position but rotated 
+        // incorrectly. This does not happen often, so we can ignore
+        // it for now.
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                for (int k=0; k<3; k++) {
+                    if (cubletMatrix[i][j][k] != solvedCube[i][j][k]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public class Cublet extends Group {
 
         public enum Type {
@@ -210,6 +228,15 @@ public class RubiksCube extends Group {
         cubletMatrix[0][2][2] = cublets[18];
         cubletMatrix[1][2][2] = cublets[11];
         cubletMatrix[2][2][2] = cublets[8];
+
+        solvedCube = new Cublet[3][3][3];
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                for (int k=0; k<3; k++) {
+                    solvedCube[i][j][k] = cubletMatrix[i][j][k];
+                }
+            }
+        }
     }
 
     private MeshView[] loadMeshes() throws ImportException {
