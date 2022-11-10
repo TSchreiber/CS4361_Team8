@@ -97,6 +97,9 @@ public class Launcher extends Application {
                     timer.resetTimer();
 					root3d.getChildren().clear();
 					var cube = new RubiksCube(); 
+                    // scramble before adding the move count system so scramble moves don't 
+                    // get counted towards the total
+                    cube.scramble();
 					root3d.getChildren().addAll(cube);
 					root3d.getChildren().add(new AmbientLight());
                     MouseHandler mouseHandler = new MouseHandler(cube);
@@ -144,6 +147,9 @@ public class Launcher extends Application {
 		});
 
         var cube = new RubiksCube();
+        // scramble before adding the move count system so scramble moves don't 
+        // get counted towards the total
+        cube.scramble();
         cube.addRotationEventHandler(e -> moveCount.setText((++i).toString()));
         root3d.getChildren().addAll(cube);
 

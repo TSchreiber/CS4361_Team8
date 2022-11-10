@@ -11,6 +11,8 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.shape.*;
 import javafx.scene.transform.*;
+import org.worldcubeassociation.tnoodle.puzzle.*;
+import org.worldcubeassociation.tnoodle.scrambles.*;
 
 public class RubiksCube extends Group {
 
@@ -119,6 +121,33 @@ public class RubiksCube extends Group {
         }
         RotationEvent e = new RotationEvent(face, angle);
         rotationEventHandlers.stream().forEach(h -> h.accept(e));
+    }
+
+    /**
+     * set doView to true for non-interactive rotations so the 
+     * meshes will have a new rotation transform applied.
+     */
+    public void rotate(Face face, int angle, boolean doView) {
+        if (doView) {
+            Rotate r = new Rotate(angle, face.normal());
+            Stream.of(get(face))
+                .flatMap(row -> Stream.of(row))
+                .flatMap(cublet -> cublet.getChildren().stream())
+                .forEach(mesh -> mesh.getTransforms().add(0, r));
+        }
+        rotate(face, angle);
+    }
+
+    public void scramble() {
+        scramble(new Random());
+    }
+
+    public void scramble(Random random) {
+        String sequenceString = 
+             new ThreeByThreeCubePuzzle()
+            .generateRandomMoves(random)
+            .generator;
+        new SequenceStringProcessor(this).accept(sequenceString);
     }
 
     public class Cublet extends Group {

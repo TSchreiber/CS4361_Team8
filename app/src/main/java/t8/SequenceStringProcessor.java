@@ -15,7 +15,7 @@ public class SequenceStringProcessor implements Consumer<String> {
     public void accept(String sequenceString) {
         Stream.of(sequenceString.split(" "))
             .map(SequenceStringProcessor::toRotation)
-            .forEach(r -> cube.rotate(r.face, r.angle));
+            .forEach(r -> cube.rotate(r.face, r.angle, true));
     }
 
     private static final Map<Character,Face> charToFaceMap = Map.of(
