@@ -144,6 +144,7 @@ public class Launcher extends Application {
 		});
 
         var cube = new RubiksCube();
+        cube.addRotationEventHandler(e -> moveCount.setText((++i).toString()));
         root3d.getChildren().addAll(cube);
 
         MouseHandler mouseHandler = new MouseHandler(cube);
