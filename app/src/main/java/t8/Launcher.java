@@ -42,31 +42,30 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, Color.BLANCHEDALMOND);
+        Scene scene = new Scene(root);
+
+        scene.getStylesheets().add(
+            Launcher.class
+            .getResource("styles.css")
+            .toExternalForm());
 
         Text moves = new Text("MOVES");
-        moves.setFont(Font.font("Helvetica", FontWeight.BOLD, 70));
+        moves.getStyleClass().add("text-7xl");
         Label moveCount = new Label(i.toString());
         timer = new Timer();
         timer.startTimer();
         stage.setOnCloseRequest(e -> timer.stopTimer());
         Text time = new Text("TIME");
-        time.setFont(Font.font("Helvetica", FontWeight.BOLD, 70));
+        time.getStyleClass().add("text-7xl");
         Label timeCount = new Label();
         timeCount.textProperty().bind(timer.getSspTime());
-       
-        moveCount.setAlignment(Pos.CENTER);
-        moveCount.setMaxWidth(200);
-        timeCount.setAlignment(Pos.CENTER);
-        timeCount.setMaxWidth(200);
-        moveCount.setFont(Font.font("Helvetica", FontWeight.BOLD, 50));
-        timeCount.setFont(Font.font("Helvetica", FontWeight.BOLD, 30));
+
+        moveCount.getStyleClass().addAll("text-4xl");
+        timeCount.getStyleClass().addAll("text-3xl");
+
         buttonRestart.setPrefSize(200, 50);
         buttonClose.setPrefSize(200, 50);
-        buttonRestart.setFont(Font.font("Helvetica", FontWeight.BOLD, 30));
-        buttonClose.setFont(Font.font("Helvetica", FontWeight.BOLD, 30));
         buttonPause.setPrefSize(200, 50);
-        buttonPause.setFont(Font.font("Helvetica", FontWeight.BOLD, 30));
 
         Leaderboard L = new Leaderboard();
         /**********************************************************************************
@@ -94,18 +93,10 @@ public class Launcher extends Application {
 
         VBox sidebar = new VBox(moves, moveCount,time,timeCount, buttonRestart, 
             buttonPause, leaderboardButton, buttonClose);
-        sidebar.setSpacing(25);
-        sidebar.setAlignment(Pos.TOP_CENTER);
-        root.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-
-        sidebar.setBackground(new Background(new BackgroundFill(Color.BLANCHEDALMOND, null, null)));
-        sidebar.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
-        root.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
-        sidebar.setPadding(new Insets(25));
+        sidebar.getStyleClass().addAll("align-top-center", "gap-sm", "p-6", "border-l-2", "border-slate-900");
 
         Group root3d = new Group();
         SubScene scene3d = new SubScene(root3d, 550, 550, true, SceneAntialiasing.BALANCED);
-        scene3d.setFill(Color.BLANCHEDALMOND);
 
         root.setAlignment(scene3d, Pos.CENTER);
 
@@ -125,7 +116,7 @@ public class Launcher extends Application {
 					var cube = new RubiksCube(); 
                     // scramble before adding the move count system so scramble moves don't 
                     // get counted towards the total
-                    //cube.scramble();
+                    cube.scramble();
 					root3d.getChildren().addAll(cube);
 					root3d.getChildren().add(new AmbientLight());
                     mouseHandler = new MouseHandler(cube);

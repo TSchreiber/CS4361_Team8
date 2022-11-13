@@ -1,0 +1,35 @@
+.root {
+    -fx-background-color: blanchedalmond;
+    -fx-font-family: "Helvetica";
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+}
+
+.text-base { -fx-font-size: 16px; }
+.text-lg   { -fx-font-size: 18px; }
+.text-xl   { -fx-font-size: 20px; }
+.text-2xl  { -fx-font-size: 24px; }
+.text-3xl  { -fx-font-size: 30px; }
+.text-4xl  { -fx-font-size: 36px; }
+.text-5xl  { -fx-font-size: 48px; }
+.text-6xl  { -fx-font-size: 60px; }
+.text-7xl  { -fx-font-size: 72px; }
+.text-8xl  { -fx-font-size: 96px; }
+.text-9xl  { -fx-font-size: 128px;}
+
+.max-w-200 { -fx-max-width: 200px; }
+
+.text-center { -fx-text-alignment: center; }
+
+.align-top-center { -fx-alignment: top-center; }
+
+.p-6 { -fx-padding: 24px; }
+
+.gap-sm   { -fx-spacing: 8px; }
+.gap-base { -fx-spacing: 16px; }
+.gap-lg   { -fx-spacing: 18px; }
+.gap-xl   { -fx-spacing: 20px; }
+.gap-2xl  { -fx-spacing: 24px; }
+
+.border-l-2 { -fx-border-width: 0 0 0 2px; }
+.border-slate-900 { -fx-border-color: rgb(15,23,42); }
