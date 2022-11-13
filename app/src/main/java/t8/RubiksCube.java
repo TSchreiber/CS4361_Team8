@@ -267,6 +267,24 @@ public class RubiksCube extends Group {
         return cublets;
     }
 
+    public void reset() {
+        /*
+        Stream.of(cubletMatrix)
+            .flatMap(row -> Stream.of(row))
+            .flatMap(cublet -> cublet.getChildren().stream())
+            .forEach(mesh -> mesh.getTransforms().clear());
+            */
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                for (int k=0; k<3; k++) {
+                    cubletMatrix[i][j][k] = solvedCube[i][j][k];
+                    cubletMatrix[i][j][k].getChildren().stream()
+                    .forEach(mesh -> mesh.getTransforms().clear());
+                }
+            }
+        }
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i=0; i<3; i++) {

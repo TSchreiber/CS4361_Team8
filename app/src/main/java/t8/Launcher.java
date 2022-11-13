@@ -105,31 +105,18 @@ public class Launcher extends Application {
             new Scale(50, 50, 50)
             );
         
-        buttonRestart.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent a) {
-				try {
-					i = 0;
-					moveCount.setText(i.toString());
-                    timer.resetTimer();
-					root3d.getChildren().clear();
-					var cube = new RubiksCube(); 
-                    // scramble before adding the move count system so scramble moves don't 
-                    // get counted towards the total
-                    cube.scramble();
-					root3d.getChildren().addAll(cube);
-					root3d.getChildren().add(new AmbientLight());
-                    mouseHandler = new MouseHandler(cube);
-                    scene3d.setOnMousePressed(mouseHandler);
-                    scene3d.setOnMouseDragged(mouseHandler);
-                    scene3d.setOnMouseReleased(mouseHandler);
-                    if(buttonPause.getText() == "Resume") {
-						buttonPause.setText("Pause");
-					}
-				} catch (Exception el) {
-					el.printStackTrace();
-				}
-			}
+        var cube = new RubiksCube();
+        buttonRestart.setOnAction(e -> {
+            timer.resetTimer();
+            cube.reset();
+            // scramble before resetting the move count so scramble moves don't 
+            // get counted towards the total
+            cube.scramble();
+            i = 0;
+            moveCount.setText(i.toString());
+            if(buttonPause.getText() == "Resume") {
+                buttonPause.setText("Pause");
+            }
 		});
         
         buttonPause.setOnAction(new EventHandler<ActionEvent>() {
@@ -165,7 +152,6 @@ public class Launcher extends Application {
 			}
 		});
 
-        var cube = new RubiksCube();
         // scramble before adding the move count system so scramble moves don't 
         // get counted towards the total
         cube.scramble();
