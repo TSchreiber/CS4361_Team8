@@ -41,7 +41,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        HBox root = new HBox();
+        BorderPane root = new BorderPane();
         Scene scene = new Scene(root, Color.BLANCHEDALMOND);
 
         Text moves = new Text("MOVES");
@@ -104,15 +104,15 @@ public class Launcher extends Application {
         sidebar.setPadding(new Insets(25));
 
         Group root3d = new Group();
-        SubScene scene3d = new SubScene(root3d, 1200, 800, true, SceneAntialiasing.BALANCED);
+        SubScene scene3d = new SubScene(root3d, 550, 550, true, SceneAntialiasing.BALANCED);
         scene3d.setFill(Color.BLANCHEDALMOND);
-        root3d.getChildren().add(new AmbientLight());
 
-        root3d.setScaleX(50);
-        root3d.setScaleY(50);
-        root3d.setScaleZ(50);
-        root3d.setTranslateX(600);
-        root3d.setTranslateY(400);
+        root.setAlignment(scene3d, Pos.CENTER);
+
+        root3d.getTransforms().addAll(
+            new Translate(275, 275),
+            new Scale(50, 50, 50)
+            );
         
         buttonRestart.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -184,15 +184,15 @@ public class Launcher extends Application {
                 onSolved();
             }
         });
-        root3d.getChildren().addAll(cube);
+        root3d.getChildren().addAll(new AmbientLight(), cube);
 
         mouseHandler = new MouseHandler(cube);
         scene3d.setOnMousePressed(mouseHandler);
         scene3d.setOnMouseDragged(mouseHandler);
         scene3d.setOnMouseReleased(mouseHandler);
 
-        root.getChildren().addAll(scene3d, sidebar);
-        
+        root.setCenter(scene3d);
+        root.setRight(sidebar);
 
         stage.setTitle("Rubik's Cube");
         stage.setScene(scene);
