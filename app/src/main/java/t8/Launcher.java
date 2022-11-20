@@ -41,6 +41,11 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.getIcons().add(
+            new Image(
+            Launcher.class
+            .getResourceAsStream("icon.png")));
+
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root);
 
