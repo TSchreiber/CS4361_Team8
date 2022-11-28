@@ -85,7 +85,7 @@ public class Timer {
     }
 
     public long getTime() {
-        return this.time - this.startTime;
+        return this.time - this.startTime + offset;
     }
 
     public SimpleStringProperty getSspTime() {

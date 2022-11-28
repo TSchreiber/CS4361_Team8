@@ -34,13 +34,17 @@ public class Launcher extends Application {
 	public static Integer i = 0;
     private MouseHandler mouseHandler;
     private Timer timer;
-    
+    private Stage stage;
+    private Button returnButton, saveButton;
+    private TextField playerTextField;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage = stage;
         stage.getIcons().add(
             new Image(
             Launcher.class
@@ -77,22 +81,17 @@ public class Launcher extends Application {
                 NEED TO UPDATE MOVE, TIME, AND SCORE WHEN THE CUBE IS COMPLETED
         ***********************************************************************************/
         Score newPlayerScore = new Score("", 0, "00:00", 0);
-        TextField playerTextField = new TextField("Enter Name!");
+        playerTextField = new TextField("Enter Name!");
 
         Button leaderboardButton = new Button("Leaderboard");
+        leaderboardButton.setPrefSize(200, 50);
 
-        Button returnButton = new Button("Back to game");
+        returnButton = new Button("Back to game");
         returnButton.setOnAction(e -> stage.setScene(scene));
 
-        Button saveButton = new Button("Save Score");
+        saveButton = new Button("Save Score");
 
         leaderboardButton.setOnAction(e -> {
-            displayLeaderboard(stage, returnButton, saveButton, playerTextField, true, newPlayerScore);
-        });
-
-        saveButton.setOnAction(e ->{
-            newPlayerScore.name = playerTextField.getText();
-            L.addScoreToList(newPlayerScore);
             displayLeaderboard(stage, returnButton, saveButton, playerTextField, false, newPlayerScore);
         });
 
@@ -122,6 +121,7 @@ public class Launcher extends Application {
             if(buttonPause.getText() == "Resume") {
                 buttonPause.setText("Pause");
             }
+            mouseHandler.enable();
 		});
         
         buttonPause.setOnAction(new EventHandler<ActionEvent>() {
@@ -184,11 +184,18 @@ public class Launcher extends Application {
     private void onSolved() {
         timer.stopTimer();
         mouseHandler.disable();
-        System.out.println(getScore());
+        displayLeaderboard(stage, returnButton, saveButton, playerTextField, true, getScore());
     }
 
-    private int getScore() {
-        return (int)(timer.getTime() * i);
+    private Score getScore() {
+        int moveCount = i;
+        long time = timer.getTime();
+        // Each move is equal to half a second
+        int effectiveTime = (int) time + moveCount * 500;
+        double steepness = 0.2; // lower flatness -> more flat
+        double c = 1_000_000; // starting value (score at moves=0,time=0)
+        int score = (int)(Math.pow(c,1+steepness) / Math.pow(effectiveTime + c, steepness));
+        return new Score("", moveCount, timer.getSspTime().get(), score);
     }
 
     public void displayLeaderboard (Stage mainStage, Button returnButton, Button saveScore, TextField playerTextField, Boolean newScore, Score newPlayerScore){
@@ -268,6 +275,12 @@ public class Launcher extends Application {
 
         //new score present
         if(newScore == true){
+            saveButton.setOnAction(e ->{
+                newPlayerScore.name = playerTextField.getText();
+                L.addScoreToList(newPlayerScore);
+                displayLeaderboard(stage, returnButton, saveButton, playerTextField, false, newPlayerScore);
+            });
+
             HBox playerHBox = new HBox(100);
             featureBox.setAlignment(Pos.CENTER);
 
