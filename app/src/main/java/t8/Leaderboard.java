@@ -13,6 +13,11 @@ public class Leaderboard {
     Leaderboard(){
         try {
             scoreFile = new File("scoreList.txt");
+            try {
+                scoreFile.createNewFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             myReader = new Scanner(scoreFile);
             while (myReader.hasNextLine()) {
               String[] splitData = myReader.nextLine().split(",");
