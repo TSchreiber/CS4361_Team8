@@ -37,7 +37,12 @@ public class Launcher extends Application {
     private Stage stage;
     private Button returnButton, saveButton;
     private TextField playerTextField;
-
+    private AnchorPane commandInputPane;
+    private TextField commandInputField;
+    private StackPane stackPane = new StackPane();
+    private RubiksCube cube;
+    private Label moveCount;
+    
     public static void main(String[] args) {
         launch(args);
     }
@@ -51,7 +56,15 @@ public class Launcher extends Application {
             .getResourceAsStream("icon.png")));
 
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(stackPane);
+        stackPane.getChildren().add(root);
+        createCommandInputPane();
+
+        root.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.SLASH) {
+                showCommandInput();
+            }
+        });
 
         scene.getStylesheets().add(
             Launcher.class
@@ -60,7 +73,7 @@ public class Launcher extends Application {
 
         Text moves = new Text("MOVES");
         moves.getStyleClass().add("text-7xl");
-        Label moveCount = new Label(i.toString());
+        moveCount = new Label(i.toString());
         timer = new Timer();
         timer.startTimer();
         stage.setOnCloseRequest(e -> timer.stopTimer());
@@ -109,7 +122,7 @@ public class Launcher extends Application {
             new Scale(50, 50, 50)
             );
         
-        var cube = new RubiksCube();
+        cube = new RubiksCube();
         buttonRestart.setOnAction(e -> {
             timer.resetTimer();
             cube.reset();
@@ -309,5 +322,45 @@ public class Launcher extends Application {
         }
         leaderboardVBox.getChildren().add(returnButton);
     } //display method ends
+
+    private void createCommandInputPane() {
+        commandInputPane = new AnchorPane();
+        commandInputField = new TextField();
+        commandInputPane.getChildren().add(commandInputField);
+        AnchorPane.setBottomAnchor(commandInputField, 20.0);
+        commandInputField.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                hideCommandInput();
+            } else if (e.getCode() == KeyCode.ENTER) {
+                switch (commandInputField.getText().toLowerCase()) {
+                    case "/shuffle demo":
+                        cube.reset();
+                        timer.resetTimer();
+                        new SequenceStringProcessor(cube)
+                            .accept("R F' ".repeat(4));
+                        i = 0;
+                        moveCount.setText(i.toString());
+                        if(buttonPause.getText() == "Resume") {
+                            buttonPause.setText("Pause");
+                        }
+                        break;
+                }
+                hideCommandInput();
+            }
+        });
+    }
+
+    private void showCommandInput() {
+        stackPane.getChildren().add(commandInputPane);
+        commandInputField.setText("/");
+        commandInputField.positionCaret(1);
+        commandInputField.requestFocus();
+    }
+
+    private void hideCommandInput() {
+        commandInputField.positionCaret(0);
+        commandInputField.setText("");
+        stackPane.getChildren().remove(commandInputPane);
+    }
 
 }
