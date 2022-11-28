@@ -135,6 +135,7 @@ public class Launcher extends Application {
                 buttonPause.setText("Pause");
             }
             mouseHandler.enable();
+            timer.startTimer();
 		});
         
         buttonPause.setOnAction(new EventHandler<ActionEvent>() {
